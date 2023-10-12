@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div><img src="{% static 'img/00.jpg' %}" class="img-fluid align-bottom"></div>
+<div>
+    <h1 class="display-2 text-center">Hello World ^^</h1>
+    <p class="lead text-center">Hello World ^^</p>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-center gap-2"> <!-- 버튼을 가운데 정렬하는 부분 -->
+                {% if user.is_authenticated%}
+                    <a href={% url 'common:logout' %} class="btn lg btn-outline-secondary" type="button">로그아웃</a>
+                    <a href={% url 'common:to_mainpage' %} class="btn lg btn-outline-secondary" role="button">질문 페이지</a>
+                {%else%}
+                    <a href={% url 'common:signup' %} class="btn btn-outline-secondary" role="button">사용자 등록</a>
+                    <a href={% url 'common:login' %} class="btn btn-outline-secondary" role="button">로그인</a>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+;

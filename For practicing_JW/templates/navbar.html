@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">공부용 웹페이지</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            {% if user.is_authenticated%}
+          <li class="nav-item">
+            <a class="nav-link" href={%url 'common:logout'%}> {{user.username}} (로그아웃)</a>
+            <li class="nav-item">
+                <a class="nav-link" href={%url 'common:to_mainpage'%}> 질문페이지 </a>
+              </li>
+            {%else%}
+            <a class="nav-link" href={%url 'common:signup'%}> 사용자 등록</a>
+            <li class="nav-item">
+                <a class="nav-link" href={%url 'common:login'%}> 로그인</a>
+              </li>
+            {%endif%}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
