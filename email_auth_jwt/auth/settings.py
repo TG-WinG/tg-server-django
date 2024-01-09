@@ -78,11 +78,11 @@ WSGI_APPLICATION = 'auth.wsgi.application'
 DATABASES = {
     'default': { 
     	'ENGINE': 'django.db.backends.mysql', 
-        'NAME': env('DB_NAME'), 
-        'USER': env('DB_USER'), 
-        'PASSWORD': env('DB_PASSWORD'), 
-        'HOST': env('DB_HOST'), 
-        'PORT': env('DB_PORT'), 
+        'NAME': 'Your DB name', 
+        'USER': 'Your DB user name', 
+        'PASSWORD': 'Your DB password', 
+        'HOST': 'Your DB host', 
+        'PORT': 'Your DB port', 
      } 
 }
 
