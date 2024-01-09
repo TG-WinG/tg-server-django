@@ -1,3 +1,4 @@
+
 email_auth_jwt/secret.env
 email_auth_jwt/db.sqlite3
 virtua/

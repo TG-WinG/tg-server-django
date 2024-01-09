@@ -22,7 +22,7 @@ TG-Server-Django를 실행하기 위해서는 다음 명령어를 실행해주�
 1. 프로젝트를 다운로드합니다.  
    ``` git clone https://github.com/TG-WinG/tg-server-django.git ```  
 2. 프로젝트 폴더로 이동해서 가상 환경을 생성하고 이를 활성화 합니다.  
-    ```cd tg-server-django```  
+   ```cd tg-server-django```  
    ```python -m venv venv```  
    ```source venv/bin/activate```  
 3. 필요한 패키지를 설치합니다.

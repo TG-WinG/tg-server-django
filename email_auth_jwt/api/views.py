@@ -1,6 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from .models import CustomUser as User
-from django.contrib import auth
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
@@ -8,23 +7,26 @@ from django.core.mail import EmailMessage
 from django.contrib.auth import authenticate
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_str
-from django.http import HttpResponse,JsonResponse
-import requests, time
+from django.http import JsonResponse
 
 
 
 def send_email(request):
-    #포스트 방식인지 확인
-    if request.method=='POST':
+    if request.method=='POST': #포스트 방식인지 확인
         auth_name=request.POST['name']
         auth_student_id=request.POST['student_id']
         auth_pw=request.POST['password']
         auth_email=request.POST['email']
         user=authenticate(email=auth_email,password=auth_pw) #유저 인증
-        if(user==None):#유저가 존재하지 않는 경우
-            return JsonResponse({"Status":"Fail","Message":"User does not exist"})
-        elif(user.name!=auth_name) or (user.student_id!=auth_student_id):#유저가 존재하지 않는 경우
-            return JsonResponse({"Status":"Fail","Message":"User information is not correct"})
+        ## 예외처리
+        if(user is None):#유저가 존재하지 않는 경우
+            return JsonResponse({"Status":"Fail","Message":"User does not exist."})
+        elif(user.name!=auth_name): #유저의 이름이 일치하지 않는 경우
+            return JsonResponse({"Status":"Fail","Message":"User's Name is not correct."})
+        elif(user.student_id!=auth_student_id):#유저의 학번이 일치하지 않는 경우
+            return JsonResponse({"Status":"Fail","Message":"User's Student ID is not correct."})
+        elif(user.is_email_activated):#유저가 이미 인증된 경우
+            return JsonResponse({"Status":"Fail","Message":"User is already activated."})
         current_site=get_current_site(request) #현재 사이트 정보 가져오기
         #메시지 발송
         message = render_to_string('mail/activation_email.html', {
@@ -48,11 +50,14 @@ def activate(request, uidb64, token):
     except(TypeError, ValueError, OverflowError, user.DoesNotExist):
             user = None
             return JsonResponse({"Status":"Fail","Message":"Error"})
-    if not(user==None) : # 인증하려는 링크가 유효한 링크라면 토큰 발행
-        user.is_email_activated = True
-        user.save()
-        return JsonResponse({"Status":"Success"})
-    else:
+    if account_activation_token.check_token(user, token): #토큰이 유효한지 확인
+        if (user.is_email_activated): #이미 인증된 유저라면
+            return JsonResponse({"Status":"Fail","Message":"User is already activated"})
+        elif (user!=None): # 인증하려는 링크가 유효한 링크라면 토큰 발행
+            user.is_email_activated = True
+            user.save()
+            return JsonResponse({"Status":"Success"})
+        else: return JsonResponse({"Status":"Fail","Message":"Error"})
+    else: # 유효하지 않은 링크라면
         return JsonResponse({"Status":"Fail","Message":"Link is not valid"})
-    return 
 
